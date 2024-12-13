@@ -18,25 +18,23 @@ questCounter = [False, 0]
 pneumonoultramicroscopicsilicovolcanoconiosis: bool = False
 
 class Player:
-    def __init__(self, health, resistance, defense, attack, attackSpeed):
+    def __init__(self, health, resistance, defense, attack):
         self.health = health
         self.resistance = resistance
         self.defense = defense
         self.attack = attack
-        self.attackSpeed = attackSpeed
     def __str__(self):
-        returned = f"Health: {self.health}, Resistance: {self.resistance}, Defense: {self.defense}, Attack: {self.attack}, Attack speed: {self.attackSpeed}"
+        returned = f"Health: {self.health}, Resistance: {self.resistance}, Defense: {self.defense}, Attack: {self.attack}"
         return returned
 
 class Enemy:
-    def __init__(self, health, resistance, defense, attack, attackSpeed):
+    def __init__(self, health, resistance, defense, attack):
         self.health = health
         self.resistance = resistance
         self.defense = defense
         self.attack = attack
-        self.attackSpeed = attackSpeed
     def __str__(self):
-        returned = f"Health: {self.health}, Resistance: {self.resistance}, Defense: {self.defense}, Attack: {self.attack}, Attack speed: {self.attackSpeed}"
+        returned = f"Health: {self.health}, Resistance: {self.resistance}, Defense: {self.defense}, Attack: {self.attack}"
         return returned
 
 playerType: list[str] = ["Mage", "Knight", "Assassin"]
@@ -51,9 +49,9 @@ time.sleep(3)
 
 stdscr.clear()
 stdscr.addstr(0,0, "You can select from three classes, each with different stats. Below you can find the stats of each class")
-stdscr.addstr(1,0, "Mage: health: 100, resistance: 5, defense: 2, attack: 5, attack speed: 2")
-stdscr.addstr(2,0, "Knight: health: 150, resistance: 10, defense: 10, attack: 10, attack speed: 2")
-stdscr.addstr(3,0, "Assassin: health: 50, resistance: 0, defense: 0, attack: 5, attack speed: 22")
+stdscr.addstr(1,0, "Mage: health: 100, resistance: 5, defense: 2, attack: 5")
+stdscr.addstr(2,0, "Knight: health: 150, resistance: 10, defense: 10, attack: 10")
+stdscr.addstr(3,0, "Assassin: health: 50, resistance: 0, defense: 0, attack: 5")
 
 stdscr.addstr(4,0, "Which class would you like? (CASE SENSITIVE, first letter, lowercase only) ")
 stdscr.refresh()
@@ -72,11 +70,11 @@ createdPlayer = classSelected
 
 
 if classSelected == "Mage":
-    createdPlayer = Player(100, 5, 2, 5, 2)
+    createdPlayer = Player(100, 5, 2, 5)
 elif classSelected == "Knight":
-    createdPlayer = Player(150, 10, 10, 10, 2)
+    createdPlayer = Player(150, 10, 10, 10)
 elif classSelected == "Assassin":
-    createdPlayer = Player(50, 0, 0, 5, 22)
+    createdPlayer = Player(50, 0, 0, 5)
 else: 
     print("Wrong class selected, program will be terminated")
     exit()
@@ -425,53 +423,46 @@ def fightEnemy(stdscr, cave: bool) -> None:
             "resistance": 5,
             "defense": 5,
             "attack": 2,
-            "attackSpeed": 5
         },
         "Turtle": {
             "health": 30,
             "resistance": 5,
             "defense": 5,
             "attack": 5,
-            "attackSpeed": 1
         },
         "Bird": {
             "health": 10,
             "resistance": 5,
             "defense": 5,
             "attack": 10,
-            "attackSpeed": 2
         },
         "Zombie": {
             "health": 10,
             "resistance": 5,
             "defense": 5,
             "attack": 15,
-            "attackSpeed": 2
         },
         "Spider": {
             "health": 10,
             "resistance": 5,
             "defense": 5,
             "attack": 5,
-            "attackSpeed": 2
         },
         "Archer": {
             "health": 10,
             "resistance": 5,
             "defense": 5,
             "attack": 10,
-            "attackSpeed": 2
         },
         "Furry Femboy :3 swordsman UwU": {
             "health": 150,
             "resistance": 10,
             "defense": 8,
             "attack": 20,
-            "attackSpeed": 4
         }
     }
     
-    createdEnemy = Enemy(enemyValues[item]["health"], enemyValues[item]["resistance"], enemyValues[item]["defense"], enemyValues[item]["attack"], enemyValues[item]["attackSpeed"])
+    createdEnemy = Enemy(enemyValues[item]["health"], enemyValues[item]["resistance"], enemyValues[item]["defense"], enemyValues[item]["attack"])
     
     stdscr.clear()
     stdscr.addstr(4,4, f"You encounter a {choiceOfEnemy}.")
