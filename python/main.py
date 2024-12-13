@@ -1,3 +1,14 @@
+'''
+Welcome to the TRPG source code, condensed into a single file for ease of use.
+
+Author: August/Emonora
+
+TODO: Remove attack speed from all classes
+TODO: Beta-test and fix bugs
+TODO: Create a credits screen
+TODO: Create a win condition
+'''
+
 import random, curses, time, math
 
 
@@ -91,19 +102,19 @@ def chooseDirection(stdscr) -> None:
             break
 
     if directionOfChoice == 102:
-        move(stdscr, "forward")
+        move(stdscr, "Forward")
     elif directionOfChoice == 108:
-        move(stdscr, "left")
+        move(stdscr, "Left")
     elif directionOfChoice == 114:
-        move(stdscr, "right")
+        move(stdscr, "Right")
     elif directionOfChoice == 98:
-        move(stdscr, "backward")
+        move(stdscr, "Backward")
     elif directionOfChoice != -1 :
         print("Invalid Direction")
         chooseDirection(stdscr)
 
 '''
-Movement functions
+Movement function
 '''
 
 def move(stdscr, direction: str) -> None:
@@ -118,7 +129,7 @@ def move(stdscr, direction: str) -> None:
     item = random.randrange(0, 5)
 
     if item in [1, 3, 5]:
-        fightEnemy(stdscr)
+        fightEnemy(stdscr, False)
 
     stdscr.clear()
     stdscr.addstr(4, 2, lists[item])
@@ -225,8 +236,21 @@ def findStructure(stdscr) -> None:
         stdscr.refresh()
         time.sleep(3)
         stdscr.clear()
-        stdscr.addstr(0,0, "BRAVE ADVENTURER! I KNOW YOU ARE NEW HERE, HOWEVER, I ASK OF YOU TO SLAY THE FURRY FEMBOY SWORDSMAN LOCATED IN THE CAVE NORTH OF TOWN")
+        stdscr.addstr(0,0, "BRAVE ADVENTURER! I KNOW YOU ARE NEW HERE, HOWEVER, I ASK OF YOU TO SLAY THE FURRY FEMBOY SWORDSMAN LOCATED IN THE CAVE NORTH OF TOWN.")
+        stdscr.addstr(1,0, "I ASk THIS OF YOU TO HELP PROTECT THE TOWN FROM THE FURRY FEMBOY SWORDSMAN.")
+        stdscr.addstr(2,0, "YOU CAN FIND THE BLACKSMITH IN TOWN, WHO WILL AID YOU IN YOUR QUEST.")
+        stdscr.addstr(3,0, "YOU CAN FIND THE ALLEYWAY IN TOWN, WHICH IS A SUSPICIOUS PLACE.")
+        stdscr.addstr(4,0, "YOU CAN FIND THE CAVE IN TOWN, WHICH IS A DANGEROUS PLACE.")
+        stdscr.refresh()
+        time.sleep(3)
+        findStructure(stdscr)
 
+
+    def cave(stdscr) -> None:
+        stdscr.clear()
+        stdscr.addstr(0,0, "You stand in a dark cave, you hear a loud growling sound.")
+        stdscr.refresh()
+        fightEnemy(stdscr, True)
 
     if stepCounter[1] >= 20:
         stdscr.addstr(4,0, "You encounter a village, what do you do? You can visit the following the buildings: (b)lack smith, (t)own hall, (s)uspicoius alleyway, (c)ave")
@@ -243,12 +267,12 @@ def findStructure(stdscr) -> None:
                 suspisciousAlleyway(stdscr)
                 break
             elif keyPressed == 99:
-                # cave()
+                cave(stdscr)
                 break
 
 
 # kind of self explanatory :3
-def fightEnemy(stdscr) -> None:
+def fightEnemy(stdscr, cave: bool) -> None:
     
     # kind of self explanatory :3
     def Attack(genEnemy, stdscr) -> None:
@@ -344,6 +368,29 @@ def fightEnemy(stdscr) -> None:
                 time.sleep(100)
                 exit()
 
+    if cave == True:
+        stdscr.clear()
+        stdscr.addstr(4,0, "You encounter a furry femboy swordsman, what do you do?")
+        stdscr.refresh()
+        time.sleep(2)
+        
+        stdscr.clear()
+        stdscr.addstr(4,0, "a)ttack d)odge p)arry")
+        stdscr.refresh()
+        time.sleep(1)
+        
+        createdEnemy = Enemy(150, 10, 8, 20, 4)
+
+        while True:
+            keyPress: int = stdscr.getch()
+            
+            if keyPress == 97:
+                Attack(createdEnemy, stdscr)
+            if keyPress == 100:
+                Dodge(createdEnemy, stdscr)
+            if keyPress == 112:
+                Parry(createdEnemy, stdscr)
+
     enemyList: list[str] = ["Slime", "Turtle", "Bird", "Zombie", "Spider", "Archer", "Furry Femboy :3 swordsman UwU"]
     item: str = random.choice(enemyList)
     choiceOfEnemy: None | str = None
@@ -437,7 +484,7 @@ def fightEnemy(stdscr) -> None:
     time.sleep(2)
     
     stdscr.clear()
-    stdscr.addstr(4,4, "A)ttack D)odge P)arry")
+    stdscr.addstr(4,4, "a)ttack d)odge p)arry")
     stdscr.refresh()
     time.sleep(1)
     
@@ -453,7 +500,7 @@ def fightEnemy(stdscr) -> None:
 
 
 '''
-Furry swordsman UwU -charles
+Furry Femboy :3 swordsman UwU -charles
 comments -mr.dartez forced me
 '''
 
