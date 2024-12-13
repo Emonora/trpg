@@ -3,13 +3,15 @@ Welcome to the TRPG source code, condensed into a single file for ease of use.
 
 Author: August/Emonora
 
-TODO: Remove attack speed from all classes
 TODO: Beta-test and fix bugs
 TODO: Create a credits screen
 TODO: Create a win condition
 '''
 
-import random, curses, time, math
+import random
+import curses
+import time
+import math
 
 
 stdscr = curses.initscr()
@@ -17,15 +19,18 @@ stepCounter = ["Right", 18]
 questCounter = [False, 0]
 pneumonoultramicroscopicsilicovolcanoconiosis: bool = False
 
+
 class Player:
     def __init__(self, health, resistance, defense, attack):
         self.health = health
         self.resistance = resistance
         self.defense = defense
         self.attack = attack
+
     def __str__(self):
         returned = f"Health: {self.health}, Resistance: {self.resistance}, Defense: {self.defense}, Attack: {self.attack}"
         return returned
+
 
 class Enemy:
     def __init__(self, health, resistance, defense, attack):
@@ -33,27 +38,35 @@ class Enemy:
         self.resistance = resistance
         self.defense = defense
         self.attack = attack
+
     def __str__(self):
         returned = f"Health: {self.health}, Resistance: {self.resistance}, Defense: {self.defense}, Attack: {self.attack}"
         return returned
 
+
 playerType: list[str] = ["Mage", "Knight", "Assassin"]
-stdscr.addstr(4, 4, "Welcome to TRPG! A fully open source, souls-like text based rpg. ")
+stdscr.addstr(
+    4, 4, "Welcome to TRPG! A fully open source, souls-like text based rpg. ")
 stdscr.refresh()
 time.sleep(1)
 
 stdscr.clear()
-stdscr.addstr(4,4, "If you haven't already, please extend your output/terminal window to the maxium width, for best gameplay")
+stdscr.addstr(
+    4, 4, "If you haven't already, please extend your output/terminal window to the maxium width, for best gameplay")
 stdscr.refresh()
 time.sleep(3)
 
 stdscr.clear()
-stdscr.addstr(0,0, "You can select from three classes, each with different stats. Below you can find the stats of each class")
-stdscr.addstr(1,0, "Mage: health: 100, resistance: 5, defense: 2, attack: 5")
-stdscr.addstr(2,0, "Knight: health: 150, resistance: 10, defense: 10, attack: 10")
-stdscr.addstr(3,0, "Assassin: health: 50, resistance: 0, defense: 0, attack: 5")
+stdscr.addstr(
+    0, 0, "You can select from three classes, each with different stats. Below you can find the stats of each class")
+stdscr.addstr(1, 0, "Mage: health: 100, resistance: 5, defense: 2, attack: 5")
+stdscr.addstr(
+    2, 0, "Knight: health: 150, resistance: 10, defense: 10, attack: 10")
+stdscr.addstr(
+    3, 0, "Assassin: health: 50, resistance: 15, defense: 10, attack: 5")
 
-stdscr.addstr(4,0, "Which class would you like? (CASE SENSITIVE, first letter, lowercase only) ")
+stdscr.addstr(
+    4, 0, "Which class would you like? (CASE SENSITIVE, first letter, lowercase only) ")
 stdscr.refresh()
 classSelected: int | str = stdscr.getch()
 
@@ -63,7 +76,7 @@ elif classSelected == 107:
     classSelected = "Knight"
 elif classSelected == 97:
     classSelected = "Assassin"
-else: 
+else:
     exit()
 
 createdPlayer = classSelected
@@ -74,8 +87,8 @@ if classSelected == "Mage":
 elif classSelected == "Knight":
     createdPlayer = Player(150, 10, 10, 10)
 elif classSelected == "Assassin":
-    createdPlayer = Player(50, 0, 0, 5)
-else: 
+    createdPlayer = Player(50, 15, 10, 5)
+else:
     print("Wrong class selected, program will be terminated")
     exit()
 
@@ -86,12 +99,16 @@ Basic game functionality starts here
 directions: list[str] = ["Left", "Right", "Forward", "Backward"]
 
 # chooses direction for you
+
+
 def chooseDirection(stdscr) -> None:
+
     curses.noecho()
     stdscr.clear()
-    stdscr.addstr(0,0, "What direction would you like to go?")
-    stdscr.addstr(1,0, "Left, Right, Forward, or Backward? (CASE SENSITIVE)")
-    stdscr.addstr(2,0, "Please only input the first letter of the direction in lower case ")
+    stdscr.addstr(0, 0, "What direction would you like to go?")
+    stdscr.addstr(1, 0, "Left, Right, Forward, or Backward? (CASE SENSITIVE)")
+    stdscr.addstr(
+        2, 0, "Only input the first letter of the direction in lowercase")
     stdscr.refresh()
 
     while True:
@@ -107,21 +124,20 @@ def chooseDirection(stdscr) -> None:
         move(stdscr, "Right")
     elif directionOfChoice == 98:
         move(stdscr, "Backward")
-    elif directionOfChoice != -1 :
+    elif directionOfChoice != -1:
         print("Invalid Direction")
         chooseDirection(stdscr)
 
-'''
-Movement function
-'''
+# movement function
+
 
 def move(stdscr, direction: str) -> None:
-    
+
     if stepCounter[1] >= 20:
         findStructure(stdscr)
-    
+
     lists = [
-        "You trip on a twig", "You encounter an enemy", "You slip on moss", 
+        "You trip on a twig", "You encounter an enemy", "You slip on moss",
         "You encounter an enemy", "You find a secret chest", "You encounter an enemy"
     ]
     item = random.randrange(0, 5)
@@ -137,7 +153,8 @@ def move(stdscr, direction: str) -> None:
         gainedHealth = createdPlayer.resistance + createdPlayer.defense
         time.sleep(2)
         stdscr.clear()
-        stdscr.addstr(4, 2, f"You gained {math.floor(gainedHealth / 2)} health!")
+        stdscr.addstr(
+            4, 2, f"You gained {math.floor(gainedHealth / 2)} health!")
         stdscr.refresh()
         createdPlayer.health += gainedHealth / 2
 
@@ -146,19 +163,24 @@ def move(stdscr, direction: str) -> None:
         if chance >= 0.50:
             stdscr.clear()
             stdscr.addstr(4, 0, "You fell :(")
+            stdscr.refresh
             createdPlayer.health -= 5
         else:
             stdscr.clear()
-            stdscr.addstr(4, 0, "you managed to catch yourself, causing you to not take any damage")
-            
+            stdscr.addstr(
+                4, 0, "you managed to catch yourself, causing you to not take any damage")
+            stdscr.refresh()
+
     if item in [2]:
         chance: float = random.random()
         if chance >= 0.7:
             stdscr.clear()
-            stdscr.addstr(4, 0, "you managed to catch yourself, causing you to not take any damage")
+            stdscr.addstr(
+                4, 0, "you managed to catch yourself, causing you to not take any damage")
         else:
             stdscr.clear()
-            stdscr.addstr(4,0, "you didn't catch yourself in time, you took 5 damage")
+            stdscr.addstr(
+                4, 0, "you didn't catch yourself in time, you took 5 damage")
             createdPlayer.health -= 5
 
     if stepCounter[0] == direction:
@@ -170,27 +192,31 @@ def move(stdscr, direction: str) -> None:
     time.sleep(1)
     chooseDirection(stdscr)
 
+
 def findStructure(stdscr) -> None:
 
-    # Location functions    
+    # Location functions
     def blackSmith(stdscr) -> None:
-        
+
         stdscr.clear()
-        stdscr.addstr(4,4, "You walk into the black smith, what do you do? (u)pgrade (s)hop")
+        stdscr.addstr(
+            4, 4, "You walk into the black smith, what do you do? (u)pgrade (s)hop")
         stdscr.refresh()
-        
+
         while True:
             keyPressed: int = stdscr.getch()
-            
+
             # upgrades
             if keyPressed == 117:
                 stdscr.clear()
-                stdscr.addstr(4,4, "You talk to the blacksmith, he offers you weapon upgrades in exchange for a quest. Would you like to get a quest?")
+                stdscr.addstr(
+                    4, 4, "You talk to the blacksmith, he offers you weapon upgrades in exchange for a quest. Would you like to get a quest?")
                 while True:
                     keyPressed: int = stdscr.getch()
                     if keyPressed == 121:
                         stdscr.clear()
-                        stdscr.addstr(4,4, "Your quest is to slay, five of any monster. And no, previously slayed monsters, do not count")
+                        stdscr.addstr(
+                            4, 4, "Your quest is to slay, five of any monster. And no, previously slayed monsters, do not count")
                         questCounter[0] = True
                     break
                 # don't forget the break statement
@@ -198,22 +224,26 @@ def findStructure(stdscr) -> None:
             # shop
             if keyPressed == 115:
                 stdscr.clear()
-                stdscr.addstr(0,4, "You can purchase an attack upgrade for free here at this village.")
+                stdscr.addstr(
+                    0, 4, "You can purchase an attack upgrade for free here at this village.")
 
     def suspisciousAlleyway(stdscr) -> None:
         stdscr.clear()
-        stdscr.addstr(0,4, "You walk into a suspisoucs alleyway, there is a person standing there.")
+        stdscr.addstr(
+            0, 4, "You walk into a suspisoucs alleyway, there is a person standing there.")
         stdscr.refresh()
         time.sleep(2)
         stdscr.clear()
-        stdscr.addstr(0,5, "He offers you a bag of 'fun' to cure your bordem. Do you take it? y or n")
-        
+        stdscr.addstr(
+            0, 5, "He offers you a bag of 'fun' to cure your bordem. Do you take it? y or n")
+
         while True:
             keyPressed = stdscr.getch()
-            
+
             if keyPressed == 121:
                 stdscr.clear()
-                stdscr.addstr(5,5, "You take the bag, and pour it all down your throat. You die of an overdose")
+                stdscr.addstr(
+                    5, 5, "You take the bag, and pour it all down your throat. You die of an overdose")
                 stdscr.refresh()
                 time.sleep(3)
                 createdPlayer.health = 0
@@ -221,37 +251,49 @@ def findStructure(stdscr) -> None:
 
             if keyPressed == 110:
                 stdscr.clear()
-                stdscr.addstr(5,5, "You polietly decline his offer. Which causes him to down the bag of 'fun'.")
-                stdscr.addstr(5,6, "He dies of an overdose")
+                stdscr.addstr(
+                    5, 5, "You polietly decline his offer. Which causes him to down the bag of 'fun'.")
+                stdscr.addstr(5, 6, "He dies of an overdose")
                 stdscr.refresh()
                 findStructure(stdscr)
                 break
 
-    def townHall(stdscr) -> None: 
+    def townHall(stdscr) -> None:
         stdscr.clear()
-        stdscr.addstr(0,0, "You stand outside the doors to the townhall.")
-        stdscr.addstr(1,0, "You hear a lot of commotion, and decide to go in.")
+        stdscr.addstr(0, 0, "You stand outside the doors to the townhall.")
+        stdscr.addstr(
+            1, 0, "You hear a lot of commotion, and decide to go in.")
         stdscr.refresh()
         time.sleep(3)
         stdscr.clear()
-        stdscr.addstr(0,0, "BRAVE ADVENTURER! I KNOW YOU ARE NEW HERE, HOWEVER, I ASK OF YOU TO SLAY THE FURRY FEMBOY SWORDSMAN LOCATED IN THE CAVE NORTH OF TOWN.")
-        stdscr.addstr(1,0, "I ASk THIS OF YOU TO HELP PROTECT THE TOWN FROM THE FURRY FEMBOY SWORDSMAN.")
-        stdscr.addstr(2,0, "YOU CAN FIND THE BLACKSMITH IN TOWN, WHO WILL AID YOU IN YOUR QUEST.")
-        stdscr.addstr(3,0, "YOU CAN FIND THE ALLEYWAY IN TOWN, WHICH IS A SUSPICIOUS PLACE.")
-        stdscr.addstr(4,0, "YOU CAN FIND THE CAVE IN TOWN, WHICH IS A DANGEROUS PLACE.")
+        stdscr.addstr(
+            0, 0, "BRAVE ADVENTURER! I KNOW YOU ARE NEW HERE, HOWEVER, I ASK OF YOU TO SLAY THE FURRY FEMBOY SWORDSMAN LOCATED IN THE CAVE.")
+        time.sleep(2)
+        stdscr.addstr(
+            1, 0, "I ASk THIS OF YOU TO HELP PROTECT THE TOWN FROM THE FURRY FEMBOY SWORDSMAN.")
+        time.sleep(2)
+        stdscr.addstr(
+            2, 0, "YOU CAN FIND THE BLACKSMITH IN TOWN, WHO WILL AID YOU IN YOUR QUEST.")
+        time.sleep(2)
+        stdscr.addstr(
+            3, 0, "YOU CAN FIND THE ALLEYWAY IN TOWN, WHICH IS A SUSPICIOUS PLACE.")
+        time.sleep(2)
+        stdscr.addstr(
+            4, 0, "YOU CAN FIND THE CAVE IN TOWN, WHICH IS A DANGEROUS PLACE.")
         stdscr.refresh()
-        time.sleep(3)
+        time.sleep(5)
         findStructure(stdscr)
-
 
     def cave(stdscr) -> None:
         stdscr.clear()
-        stdscr.addstr(0,0, "You stand in a dark cave, you hear a loud growling sound.")
+        stdscr.addstr(
+            0, 0, "You stand in a dark cave, you hear a loud growling sound.")
         stdscr.refresh()
         fightEnemy(stdscr, True)
 
     if stepCounter[1] >= 20:
-        stdscr.addstr(4,0, "You encounter a village, what do you do? You can visit the following the buildings: (b)lack smith, (t)own hall, (s)uspicoius alleyway, (c)ave")
+        stdscr.addstr(
+            4, 0, "You encounter a village, what do you do? You can visit the following the buildings: (b)lack smith, (t)own hall, (s)uspicoius alleyway, (c)ave")
         stdscr.refresh()
         while True:
             keyPressed: int = stdscr.getch()
@@ -271,7 +313,7 @@ def findStructure(stdscr) -> None:
 
 # kind of self explanatory :3
 def fightEnemy(stdscr, cave: bool) -> None:
-    
+
     # kind of self explanatory :3
     def Attack(genEnemy, stdscr) -> None:
         playerAttack = createdPlayer.attack
@@ -284,14 +326,15 @@ def fightEnemy(stdscr, cave: bool) -> None:
             genEnemy.health = enemyHealth
             if enemyHealth > 0:
                 stdscr.clear()
-                stdscr.addstr(4,4, f"you hit it, the enemy's health is: {enemyHealth}")
+                stdscr.addstr(
+                    4, 4, f"you hit it, the enemy's health is: {enemyHealth}")
                 stdscr.refresh()
                 time.sleep(2)
             else:
                 if questCounter[0] == True:
                     questCounter[1] += 1
                 stdscr.clear()
-                stdscr.addstr(4,4, "Enemy Desimated")
+                stdscr.addstr(4, 4, "Enemy Desimated")
                 stdscr.refresh()
                 time.sleep(2)
                 chooseDirection(stdscr)
@@ -299,17 +342,19 @@ def fightEnemy(stdscr, cave: bool) -> None:
             playerHealth = playerHealth - enemyAttack
             createdPlayer.health = playerHealth
             stdscr.clear()
-            
+
             if playerHealth > 0:
-                stdscr.addstr(4,4, f"you missed, your health is: {playerHealth}")
+                stdscr.addstr(
+                    4, 4, f"you missed, your health is: {playerHealth}")
                 stdscr.refresh()
             else:
-                stdscr.addstr(4,4, "you died a horrible gorey death we can't describe due to content restrictions :(")
+                stdscr.addstr(
+                    4, 4, "you died a horrible gorey death we can't describe due to content restrictions :(")
                 stdscr.refresh()
                 time.sleep(1)
                 exit()
             time.sleep(2)
-        
+
         if enemyHealth > 0:
             while True:
                 keyPress = stdscr.getch()
@@ -320,25 +365,27 @@ def fightEnemy(stdscr, cave: bool) -> None:
                 if keyPress == 112:
                     Parry(createdEnemy, stdscr)
 
-    def Dodge(genEnemy,stdscr) -> None:
+    def Dodge(genEnemy, stdscr) -> None:
         enemyAttack = genEnemy.attack
         playerHealth = createdPlayer.health
         stdscr.clear()
         chance = random.random()
         if chance > 0.5:
-            stdscr.addstr(4,4, "You dodged")
+            stdscr.addstr(4, 4, "You dodged")
         else:
-            stdscr.addstr(4,4, "You didn't dodge in time")
+            stdscr.addstr(4, 4, "You didn't dodge in time")
             if playerHealth > 0:
                 playerHealth = playerHealth - enemyAttack
                 createdPlayer.health = playerHealth
                 time.sleep(1)
                 stdscr.clear()
-                stdscr.addstr(4,4, f"You now have {playerHealth} total health")
+                stdscr.addstr(
+                    4, 4, f"You now have {playerHealth} total health")
                 stdscr.refresh()
                 time.sleep(1)
             else:
-                stdscr.addstr(4,4, "you died a horrible gorey death we can't describe due to content restrictions :(")
+                stdscr.addstr(
+                    4, 4, "you died a horrible gorey death we can't describe due to content restrictions :(")
                 stdscr.refresh()
                 time.sleep(1)
                 exit()
@@ -346,42 +393,45 @@ def fightEnemy(stdscr, cave: bool) -> None:
     def Parry(genEnemy, stdscr) -> None:
         enemyAttack = genEnemy.attack
         playerHealth = createdPlayer.health
-        
+
         chance = random.random()
         if chance > 0.5:
             stdscr.clear()
-            stdscr.addstr(4,4, "You parried")
+            stdscr.addstr(4, 4, "You parried")
             stdscr.refresh()
         else:
             if playerHealth > 0:
                 playerHealth = playerHealth - enemyAttack
                 createdPlayer.health = playerHealth
-                
+
                 stdscr.clear()
-                stdscr.addstr(4,4, f"You didn't parry in time, you now have {playerHealth} health remaining")
+                stdscr.addstr(
+                    4, 4, f"You didn't parry in time, you now have {playerHealth} health remaining")
                 stdscr.refresh()
             else:
-                stdscr.addstr(4,4, "you died a horrible gorey death we can't describe due to content restrictions :(")
+                stdscr.addstr(
+                    4, 4, "you died a horrible gorey death we can't describe due to content restrictions :(")
                 stdscr.refresh()
                 time.sleep(100)
                 exit()
 
     if cave == True:
         stdscr.clear()
-        stdscr.addstr(4,0, "You encounter a furry femboy swordsman, what do you do?")
+        stdscr.addstr(
+            4, 0, "You encounter a furry femboy swordsman, what do you do?")
         stdscr.refresh()
         time.sleep(2)
-        
+
         stdscr.clear()
-        stdscr.addstr(4,0, "a)ttack d)odge p)arry")
+        stdscr.addstr(4, 0, "a)ttack d)odge p)arry")
         stdscr.refresh()
         time.sleep(1)
-        
+
         createdEnemy = Enemy(150, 10, 8, 20, 4)
 
         while True:
             keyPress: int = stdscr.getch()
-            
+
             if keyPress == 97:
                 Attack(createdEnemy, stdscr)
             if keyPress == 100:
@@ -389,36 +439,36 @@ def fightEnemy(stdscr, cave: bool) -> None:
             if keyPress == 112:
                 Parry(createdEnemy, stdscr)
 
-    enemyList: list[str] = ["Slime", "Turtle", "Bird", "Zombie", "Spider", "Archer", "Furry Femboy :3 swordsman UwU"]
+    enemyList: list[str] = ["Slime", "Turtle", "Bird", "Zombie",
+                            "Spider", "Archer", "Furry Femboy :3 swordsman UwU"]
     item: str = random.choice(enemyList)
     choiceOfEnemy: None | str = None
 
     if item == "Slime":
         choiceOfEnemy = "Slime"
-        
+
     elif item == "Turtle":
         choiceOfEnemy = "Turtle"
-        
+
     elif item == "Bird":
         choiceOfEnemy = "Bird"
-        
+
     elif item == "Zombie":
         choiceOfEnemy = "Zombie"
-        
+
     elif item == "Spider":
         choiceOfEnemy = "Spider"
-        
+
     elif item == "Archer":
         choiceOfEnemy = "Archer"
-        
+
     else:
         choiceOfEnemy = "Furry Femboy :3 swordsman UwU"
 
-
     createdEnemy = None
-    
+
     enemyValues = {
-        "Slime":{
+        "Slime": {
             "health": 10,
             "resistance": 5,
             "defense": 5,
@@ -461,27 +511,28 @@ def fightEnemy(stdscr, cave: bool) -> None:
             "attack": 20,
         }
     }
-    
-    createdEnemy = Enemy(enemyValues[item]["health"], enemyValues[item]["resistance"], enemyValues[item]["defense"], enemyValues[item]["attack"])
-    
+
+    createdEnemy = Enemy(enemyValues[item]["health"], enemyValues[item]
+                         ["resistance"], enemyValues[item]["defense"], enemyValues[item]["attack"])
+
     stdscr.clear()
-    stdscr.addstr(4,4, f"You encounter a {choiceOfEnemy}.")
+    stdscr.addstr(4, 4, f"You encounter a {choiceOfEnemy}.")
     stdscr.refresh()
     time.sleep(3)
-    
+
     stdscr.clear()
-    stdscr.addstr(4,4, "What do you do?")
+    stdscr.addstr(4, 4, "What do you do?")
     stdscr.refresh()
     time.sleep(2)
-    
+
     stdscr.clear()
-    stdscr.addstr(4,4, "a)ttack d)odge p)arry")
+    stdscr.addstr(4, 4, "a)ttack d)odge p)arry")
     stdscr.refresh()
     time.sleep(1)
-    
+
     while True:
         keyPress: int = stdscr.getch()
-        
+
         if keyPress == 97:
             Attack(createdEnemy, stdscr)
         if keyPress == 100:
@@ -503,13 +554,14 @@ def main(stdscr) -> None:
     stdscr.timeout(100)
     stdscr.keypad(False)
     curses.noecho()
-    
+
     while createdPlayer.health > 0:
         if createdPlayer.resistance != None and createdPlayer.defense != None:
             chooseDirection(stdscr)
         else:
             stdscr.clear()
-            stdscr.addstr(0,4, "Player stat initalization failed, exiting........")
+            stdscr.addstr(
+                0, 4, "Player stat initalization failed, exiting........")
             time.sleep(0.5)
             exit()
 
