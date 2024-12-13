@@ -5,5 +5,5 @@ import (
 )
 
 func main() {
-	fmt.Println("Hello, World!")
+	fmt.Println("Welcome to trpg, a souls like rpg originally written in python, ported to go!")
 }

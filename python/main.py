@@ -1,6 +1,5 @@
-import random
-import curses
-import time
+import random, curses, time, math
+
 
 stdscr = curses.initscr()
 stepCounter = ["Right", 18]
@@ -33,10 +32,12 @@ playerType: list[str] = ["Mage", "Knight", "Assassin"]
 stdscr.addstr(4, 4, "Welcome to TRPG! A fully open source, souls-like text based rpg. ")
 stdscr.refresh()
 time.sleep(1)
+
 stdscr.clear()
 stdscr.addstr(4,4, "If you haven't already, please extend your output/terminal window to the maxium width, for best gameplay")
 stdscr.refresh()
-time.sleep(5)
+time.sleep(3)
+
 stdscr.clear()
 stdscr.addstr(0,0, "You can select from three classes, each with different stats. Below you can find the stats of each class")
 stdscr.addstr(1,0, "Mage: health: 100, resistance: 5, defense: 2, attack: 5, attack speed: 2")
@@ -55,9 +56,9 @@ elif classSelected == 97:
     classSelected = "Assassin"
 else: 
     exit()
-    
+
 createdPlayer = classSelected
-    
+
 
 if classSelected == "Mage":
     createdPlayer = Player(100, 5, 2, 5, 2)
@@ -82,21 +83,21 @@ def chooseDirection(stdscr) -> None:
     stdscr.addstr(0,0, "What direction would you like to go?")
     stdscr.addstr(1,0, "Left, Right, Forward, or Backward? (CASE SENSITIVE)")
     stdscr.addstr(2,0, "Please only input the first letter of the direction in lower case ")
-    stdscr.addstr(10,0, "If the game freezes, please press a")
     stdscr.refresh()
+
     while True:
         directionOfChoice: int = stdscr.getch()
         if directionOfChoice != -1:
             break
-        
+
     if directionOfChoice == 102:
-        moveForward(stdscr)
+        move(stdscr, "forward")
     elif directionOfChoice == 108:
-        moveLeft(stdscr)
+        move(stdscr, "left")
     elif directionOfChoice == 114:
-        moveRight(stdscr)
+        move(stdscr, "right")
     elif directionOfChoice == 98:
-        moveBackward(stdscr)
+        move(stdscr, "backward")
     elif directionOfChoice != -1 :
         print("Invalid Direction")
         chooseDirection(stdscr)
@@ -105,72 +106,60 @@ def chooseDirection(stdscr) -> None:
 Movement functions
 '''
 
-def moveForward(stdscr) -> None:
-    list: [str] = ["You trip on a twig", "You encouter an enemy", "You slip on moss", "You encouter an enemy", "You find a secret chest", "You encouter an enemy"]
-    item: int = random.randrange(0, 5, 1)
-    stdscr.addstr(4,2, str(list[item]))
-    stdscr.refresh()
-    if item == 1 or item == 3 or item == 5:
-        stepCounter[1] = stepCounter[1] + 1
-        fightEnemy(stdscr)
-    if stepCounter[0] == "Forward":
-        stepCounter[1] = stepCounter[1] + 1
-    else:
-        stepCounter[0] = "Forward"
-        stepCounter[1] = 1
-
-    time.sleep(1)
-
-def moveBackward(stdscr) -> None:
-    list: list[str] = ["You trip on a twig", "You encouter an enemy", "You slip on moss", "You encounter an enemy", "You fall backwards", "You encouter an enemy", "You find a secret chest", "You encouter an enemy"]
-    item: int = random.randrange(0, 7, 1)
-    stdscr.addstr(4,2, str(list[item]))
-    stdscr.refresh()
-    if item == 1 or item == 3 or item == 5 or item == 7:
-        fightEnemy(stdscr)
-    if stepCounter[0] == "Backward":
-        stepCounter[1] = stepCounter[1] + 1
-    else:
-        stepCounter[0] = "Backward"
-        stepCounter[1] = 1
-    
-    time.sleep(1)
-
-
-def moveLeft(stdscr) -> None:
-    list: list[str] = ["You trip on a twig", "You encouter an enemy", "You slip on moss", "You encouter an enemy", "You find a secret chest", "You encouter an enemy"]
-    item: int = random.randrange(0, 5, 1)
-    stdscr.addstr(4, 2, str(list[item]))
-    stdscr.refresh()
-    if item == 1 or item == 3 or item == 5:
-        fightEnemy(stdscr)
-    if stepCounter[0] == "Left":
-        stepCounter[1] = stepCounter[1] + 1
-    else:
-        stepCounter[0] = "Left"
-        stepCounter[1] = 1
-    
-    time.sleep(1)
-
-
-def moveRight(stdscr) -> None:
-    list: list[str] = ["You trip on a twig", "You encouter an enemy", "You slip on moss", "You encouter an enemy", "You find a secret chest", "You encouter an enemy"]
-    item: int = random.randrange(0, 5, 1)
+def move(stdscr, direction: str) -> None:
     
     if stepCounter[1] >= 20:
         findStructure(stdscr)
     
-    stdscr.addstr(4, 2, str(list[item]))
-    stdscr.refresh()
-    if item == 1 or item == 3 or item == 5:
+    lists = [
+        "You trip on a twig", "You encounter an enemy", "You slip on moss", 
+        "You encounter an enemy", "You find a secret chest", "You encounter an enemy"
+    ]
+    item = random.randrange(0, 5)
+
+    if item in [1, 3, 5]:
         fightEnemy(stdscr)
-    if stepCounter[0] == "Right":
-        stepCounter[1] = stepCounter[1] + 1
+
+    stdscr.clear()
+    stdscr.addstr(4, 2, lists[item])
+    stdscr.refresh()
+
+    if item in [4]:
+        gainedHealth = createdPlayer.resistance + createdPlayer.defense
+        time.sleep(2)
+        stdscr.clear()
+        stdscr.addstr(4, 2, f"You gained {math.floor(gainedHealth / 2)} health!")
+        stdscr.refresh()
+        createdPlayer.health += gainedHealth / 2
+
+    if item in [0]:
+        chance: float = random.random()
+        if chance >= 0.50:
+            stdscr.clear()
+            stdscr.addstr(4, 0, "You fell :(")
+            createdPlayer.health -= 5
+        else:
+            stdscr.clear()
+            stdscr.addstr(4, 0, "you managed to catch yourself, causing you to not take any damage")
+            
+    if item in [2]:
+        chance: float = random.random()
+        if chance >= 0.7:
+            stdscr.clear()
+            stdscr.addstr(4, 0, "you managed to catch yourself, causing you to not take any damage")
+        else:
+            stdscr.clear()
+            stdscr.addstr(4,0, "you didn't catch yourself in time, you took 5 damage")
+            createdPlayer.health -= 5
+
+    if stepCounter[0] == direction:
+        stepCounter[1] += 1
     else:
-        stepCounter[0] = "Right"
+        stepCounter[0] = direction
         stepCounter[1] = 1
-    
+
     time.sleep(1)
+    chooseDirection(stdscr)
 
 def findStructure(stdscr) -> None:
 
@@ -201,7 +190,7 @@ def findStructure(stdscr) -> None:
             if keyPressed == 115:
                 stdscr.clear()
                 stdscr.addstr(0,4, "You can purchase an attack upgrade for free here at this village.")
-                
+
     def suspisciousAlleyway(stdscr) -> None:
         stdscr.clear()
         stdscr.addstr(0,4, "You walk into a suspisoucs alleyway, there is a person standing there.")
@@ -220,6 +209,7 @@ def findStructure(stdscr) -> None:
                 time.sleep(3)
                 createdPlayer.health = 0
                 exit()
+
             if keyPressed == 110:
                 stdscr.clear()
                 stdscr.addstr(5,5, "You polietly decline his offer. Which causes him to down the bag of 'fun'.")
@@ -227,7 +217,7 @@ def findStructure(stdscr) -> None:
                 stdscr.refresh()
                 findStructure(stdscr)
                 break
-    
+
     def townHall(stdscr) -> None: 
         stdscr.clear()
         stdscr.addstr(0,0, "You stand outside the doors to the townhall.")
@@ -235,9 +225,10 @@ def findStructure(stdscr) -> None:
         stdscr.refresh()
         time.sleep(3)
         stdscr.clear()
-        
-    
-    if stepCounter[1] == 20:
+        stdscr.addstr(0,0, "BRAVE ADVENTURER! I KNOW YOU ARE NEW HERE, HOWEVER, I ASK OF YOU TO SLAY THE FURRY FEMBOY SWORDSMAN LOCATED IN THE CAVE NORTH OF TOWN")
+
+
+    if stepCounter[1] >= 20:
         stdscr.addstr(4,0, "You encounter a village, what do you do? You can visit the following the buildings: (b)lack smith, (t)own hall, (s)uspicoius alleyway, (c)ave")
         stdscr.refresh()
         while True:
@@ -246,7 +237,7 @@ def findStructure(stdscr) -> None:
                 blackSmith(stdscr)
                 break
             elif keyPressed == 116:
-                # townHall()
+                townHall(stdscr)
                 break
             elif keyPressed == 115:
                 suspisciousAlleyway(stdscr)
@@ -255,7 +246,7 @@ def findStructure(stdscr) -> None:
                 # cave()
                 break
 
-    
+
 # kind of self explanatory :3
 def fightEnemy(stdscr) -> None:
     
@@ -299,14 +290,14 @@ def fightEnemy(stdscr) -> None:
         
         if enemyHealth > 0:
             while True:
-                keyPressed = stdscr.getch()
-                if keyPressed == 97:
+                keyPress = stdscr.getch()
+                if keyPress == 97:
                     Attack(genEnemy, stdscr)
                 if keyPress == 100:
                     Dodge(createdEnemy, stdscr)
                 if keyPress == 112:
                     Parry(createdEnemy, stdscr)
-            
+
     def Dodge(genEnemy,stdscr) -> None:
         enemyAttack = genEnemy.attack
         playerHealth = createdPlayer.health
@@ -329,7 +320,7 @@ def fightEnemy(stdscr) -> None:
                 stdscr.refresh()
                 time.sleep(1)
                 exit()
-                
+
     def Parry(genEnemy, stdscr) -> None:
         enemyAttack = genEnemy.attack
         playerHealth = createdPlayer.health
@@ -352,11 +343,11 @@ def fightEnemy(stdscr) -> None:
                 stdscr.refresh()
                 time.sleep(100)
                 exit()
-                
-    enemyList: [str] = ["Slime", "Turtle", "Bird", "Zombie", "Spider", "Archer", "Furry Femboy :3 swordsman UwU"]
+
+    enemyList: list[str] = ["Slime", "Turtle", "Bird", "Zombie", "Spider", "Archer", "Furry Femboy :3 swordsman UwU"]
     item: str = random.choice(enemyList)
     choiceOfEnemy: None | str = None
-    
+
     if item == "Slime":
         choiceOfEnemy = "Slime"
         
@@ -377,8 +368,8 @@ def fightEnemy(stdscr) -> None:
         
     else:
         choiceOfEnemy = "Furry Femboy :3 swordsman UwU"
-    
-        
+
+
     createdEnemy = None
     
     enemyValues = {
@@ -466,7 +457,7 @@ Furry swordsman UwU -charles
 comments -mr.dartez forced me
 '''
 
-    
+
 # INCLUDE THIS LINE AT THE END OF THE CODE, AND CREATE AN ALL ENCOMPASSING FUNCTION TO HANDLE LOGIC
 
 def main(stdscr) -> None:
@@ -474,10 +465,19 @@ def main(stdscr) -> None:
     stdscr.timeout(100)
     stdscr.keypad(False)
     curses.noecho()
-    while True:
-        if createdPlayer.health > 0:
-            chooseDirection(stdscr)
-        else: 
-            break
     
+    while createdPlayer.health > 0:
+        if createdPlayer.resistance != None and createdPlayer.defense != None:
+            chooseDirection(stdscr)
+        else:
+            stdscr.clear()
+            stdscr.addstr(0,4, "Player stat initalization failed, exiting........")
+            time.sleep(0.5)
+            exit()
+
+    stdscr.addstr(4, 4, "Game Over!")
+    stdscr.refresh()
+    time.sleep(2)
+
+
 curses.wrapper(main)
