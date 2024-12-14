@@ -422,7 +422,7 @@ def fightEnemy(stdscr, cave: bool) -> None:
             if keyPress == 112:
                 Parry(createdEnemy, stdscr, cave)
     
-    enemyList: [str] = ["Slime", "Turtle", "Bird", "Zombie", "Spider", "Archer", "Furry Femboy :3 swordsman UwU"]
+    enemyList: list[str] = ["Slime", "Turtle", "Bird", "Zombie", "Spider", "Archer", "Furry Femboy :3 swordsman UwU"]
     item: str = random.choice(enemyList)
     choiceOfEnemy: None | str = None
     
