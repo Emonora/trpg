@@ -1,3 +1,9 @@
+/*
+	Everything within this file, should function similarly to the original python version, with a few exceptions.
+	The main difference is that this is written in golang, and the python version is written in python.
+	This file was my first project in golang, and I'm still learning the language.
+*/
+
 package main
 
 import (
@@ -7,8 +13,8 @@ import (
 )
 
 var cave bool = false
-var questCounter = [...]any{false, 0}
-var stepCounter = [...]any{"Direction", 0}
+var questCounter = [...]interface{}{false, 0}
+var stepCounter = [...]interface{}{"Direction", 0}
 var pneumonoultramicroscopicsilicovolcanoconiosis bool = false
 
 type Player struct {
@@ -101,6 +107,7 @@ func generateEnemy() Enemy {
 	return enemy
 }
 
+// fightEnemy function, including all sub-functions
 func fightEnemy(player Player, enemy Enemy) {
 	Attack := func(player *Player, enemy *Enemy) {
 		playerAttack := player.Attack
@@ -199,6 +206,7 @@ func fightEnemy(player Player, enemy Enemy) {
 
 }
 
+// movement function
 func move(player Player, direction string) {
 
 	chooseEvent := func() string {
@@ -220,6 +228,18 @@ func move(player Player, direction string) {
 			var chosenEvent string = chooseEvent()
 			if chosenEvent != "You encounter an enemy" {
 				fmt.Println(chosenEvent)
+				if stepCounter[0] != "Left" {
+					stepCounter[0] = "Left"
+					stepCounter[1] = 1
+				} else {
+					val, ok := stepCounter[1].(int)
+					if !ok {
+						fmt.Println("Error: stepCounter[1] is not an int")
+						os.Exit(1)
+					}
+					val++
+					stepCounter[1] = val
+				}
 			} else {
 				genEnemy := generateEnemy()
 				fightEnemy(player, genEnemy)
@@ -228,22 +248,61 @@ func move(player Player, direction string) {
 			var chosenEvent string = chooseEvent()
 			if chosenEvent != "You encounter an enemy" {
 				fmt.Println(chosenEvent)
+				if stepCounter[0] != "Right" {
+					stepCounter[0] = "Right"
+					stepCounter[1] = 1
+				} else {
+					val, ok := stepCounter[1].(int)
+					if !ok {
+						fmt.Println("Error: stepCounter[1] is not an int")
+						os.Exit(1)
+					}
+					val++
+					stepCounter[1] = val
+				}
 			} else {
-				generateEnemy()
+				genEnemy := generateEnemy()
+				fightEnemy(player, genEnemy)
 			}
 		case "Forward", "forward", "F", "f":
 			var chosenEvent string = chooseEvent()
 			if chosenEvent != "You encounter an enemy" {
 				fmt.Println(chosenEvent)
+				if stepCounter[0] != "Forward" {
+					stepCounter[0] = "Forward"
+					stepCounter[1] = 1
+				} else {
+					val, ok := stepCounter[1].(int)
+					if !ok {
+						fmt.Println("Error: stepCounter[1] is not an int")
+						os.Exit(1)
+					}
+					val++
+					stepCounter[1] = val
+				}
 			} else {
-				generateEnemy()
+				genEnemy := generateEnemy()
+				fightEnemy(player, genEnemy)
 			}
 		case "Backward", "backward", "B", "b":
 			var chosenEvent string = chooseEvent()
 			if chosenEvent != "You encounter an enemy" {
 				fmt.Println(chosenEvent)
+				if stepCounter[0] != "Backward" {
+					stepCounter[0] = "Backward"
+					stepCounter[1] = 1
+				} else {
+					val, ok := stepCounter[1].(int)
+					if !ok {
+						fmt.Println("Error: stepCounter[1] is not an int")
+						os.Exit(1)
+					}
+					val++
+					stepCounter[1] = val
+				}
 			} else {
-				generateEnemy()
+				genEnemy := generateEnemy()
+				fightEnemy(player, genEnemy)
 			}
 		default:
 			fmt.Println("Invalid direction")
@@ -252,6 +311,7 @@ func move(player Player, direction string) {
 	}
 }
 
+// main function, which is the entry point of the program
 func main() {
 
 	var player Player = startGame()
