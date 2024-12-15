@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"time"
+	"os"
 )
 
 type Player struct {
@@ -12,48 +12,104 @@ type Player struct {
 	Attack     int
 }
 
-func main() {
-	var player Player
+type Enemy struct {
+	Health     int
+	Resistance int
+	Defense    int
+	Attack     int
+}
 
-	init := func() {
-		fmt.Println("Welcome to trpg, a souls like rpg originally written in python, ported to go!")
-		time.Sleep(time.Second * 2)
-		fmt.Println("You can select from three classes, each with different stats. Below you can find the stats of each class")
-		time.Sleep(time.Second * 2)
-		fmt.Println("Mage: health: 130, resistance: 5, defense: 2, attack: 10")
-		fmt.Println("Knight: health: 180, resistance: 10, defense: 10, attack: 12")
-		fmt.Println("Assassin: health: 70, resistance: 15, defense: 10, attack: 9")
-		time.Sleep(time.Second * 2)
-		fmt.Println("Which class would you like? (CASE SENSITIVE)")
-		var classSelected string
-		fmt.Scanln(&classSelected)
+func startGame() Player {
+	fmt.Println("Welcome to trpg! A simple rpg game written in golang")
+	fmt.Println("You can pick a class to play below.")
+	fmt.Println("1. Knight: 180 health, 10 resistance, 10 defense, 12 attack")
+	fmt.Println("2. Mage: 130 health, 5 resistance, 2 defense, 10 attack")
+	fmt.Println("3. Assassin: 70 health, 15 resistance, 10 defense, 9 attack")
+	fmt.Println("Which class would you like to play? (CASE SENSITIVE)")
+	fmt.Println("")
 
-		if classSelected == "Mage" {
-			fmt.Println("You selected the mage class")
-			player.Health = 130
-			player.Resistance = 5
-			player.Defense = 2
-			player.Attack = 10
-			fmt.Println(player)
-		} else if classSelected == "Knight" {
-			fmt.Println("You selected the knight class")
-			player.Health = 180
-			player.Resistance = 10
-			player.Defense = 10
-			player.Attack = 12
-		} else if classSelected == "Assassin" {
-			fmt.Println("You selected the assassin class")
-			player.Health = 70
-			player.Resistance = 15
-			player.Defense = 10
-			player.Attack = 9
-		} else {
-			fmt.Println("Invalid class selected, please try again")
-			main()
+	var classSelected string
+	_, err := fmt.Scanln(&classSelected)
+	var player Player = Player{
+		Health:     0,
+		Resistance: 0,
+		Defense:    0,
+		Attack:     0,
+	}
+	if err != nil {
+		fmt.Println("Invalid input")
+		os.Exit(1)
+	} else {
+		switch classSelected {
+		case "Knight", "knight", "1", "1.":
+			fmt.Println("You chose the knight class")
+			fmt.Println("You have 180 health, 10 resistance, 10 defense, 12 attack")
+			player = Player{
+				Health:     180,
+				Resistance: 10,
+				Defense:    10,
+				Attack:     12,
+			}
+			return player
+		case "Mage", "mage", "2", "2.":
+			fmt.Println("You chose the mage class")
+			fmt.Println("You have 130 health, 5 resistance, 2 defense, 10 attack")
+			player = Player{
+				Health:     130,
+				Resistance: 5,
+				Defense:    2,
+				Attack:     10,
+			}
+			return player
+		case "Assassin", "assassin", "3", "3.":
+			fmt.Println("You chose the assassin class")
+			fmt.Println("")
+			fmt.Println("You have 70 health, 15 resistance, 10 defense, 9 attack")
+			player = Player{
+				Health:     70,
+				Resistance: 15,
+				Defense:    10,
+				Attack:     9,
+			}
+			return player
+		default:
+			fmt.Println("Invalid class selected")
+			os.Exit(1)
 		}
 	}
+	return player
+}
 
-	init()
-
-	fmt.Println("Welcome to the game!")
+func main() {
+	var player Player = startGame()
+	for {
+		fmt.Println("")
+		fmt.Println("What direction would you like to go?")
+		fmt.Println("Left, Right, Forward, or Backward? (CASE SENSITIVE) ")
+		fmt.Println("")
+		var direction string
+		_, err := fmt.Scanln(&direction)
+		if err != nil {
+			fmt.Println("Invalid input")
+			os.Exit(1)
+		} else {
+			switch direction {
+			case "Left", "left", "L", "l":
+				player.Attack += 1
+				player.Health -= 1
+			case "Right", "right", "R", "r":
+				player.Attack += 1
+				player.Health -= 1
+			case "Forward", "forward", "F", "f":
+				player.Attack += 1
+				player.Health -= 1
+			case "Backward", "backward", "B", "b":
+				player.Attack += 1
+				player.Health -= 1
+			default:
+				continue
+			}
+		}
+	}
+	player.Health = 0
 }
