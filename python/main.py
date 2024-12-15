@@ -498,7 +498,7 @@ def fightEnemy(stdscr, cave: bool) -> None:
     createdEnemy = Enemy(enemyValues[item]["health"], enemyValues[item]["resistance"], enemyValues[item]["defense"], enemyValues[item]["attack"])
     
     stdscr.clear()
-    stdscr.addstr(4,4, f"You encounter a {choiceOfEnemy}.")
+    stdscr.addstr(4,4, f"You encounter a(n) {choiceOfEnemy}.")
     stdscr.refresh()
     time.sleep(3)
     
