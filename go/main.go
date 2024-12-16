@@ -206,6 +206,50 @@ func fightEnemy(player Player, enemy Enemy) {
 
 }
 
+func findStructure(player *Player) {
+	val, ok := stepCounter[1].(int)
+	if !ok {
+		fmt.Println("Error: stepCounter[1] is not an int")
+		os.Exit(1)
+	}
+	if val >= 20 {
+		fmt.Println("You encounter a village! You have four places to choose from")
+		fmt.Println("1. Village Blacksmith")
+		fmt.Println("2. Village Town Hall")
+		fmt.Println("3. Village Cave")
+		fmt.Println("4. Village Alley")
+		fmt.Println("")
+		var choice string
+		_, err := fmt.Scanln(&choice)
+		if err != nil {
+			fmt.Println("Invalid input")
+			os.Exit(1)
+		} else {
+			switch choice {
+			case "1", "1.":
+				fmt.Println("You choose the blacksmith")
+				fmt.Println("You walk into the blacksmith, and you see a man hammering away at a piece of metal")
+				fmt.Println("")
+				fmt.Println("The man offers you a piece of metal, and you take it. This increases your damgee by 6")
+				player.Attack += 6
+			case "2", "2.":
+				fmt.Println("You choose the town hall")
+				stepCounter[1] = 1
+			case "3", "3.":
+				fmt.Println("You choose the cave")
+				stepCounter[1] = 1
+			case "4", "4.":
+				fmt.Println("You choose the alley")
+				stepCounter[1] = 1
+			default:
+				fmt.Println("Invalid choice")
+				os.Exit(1)
+			}
+		}
+
+	}
+}
+
 // movement function
 func move(player Player, direction string) {
 
