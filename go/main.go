@@ -107,6 +107,15 @@ func generateEnemy() Enemy {
 	return enemy
 }
 
+func credits() {
+	fmt.Println("You finished the game!")
+	fmt.Println("Good job!")
+	fmt.Println("")
+	fmt.Println("Furry femboy swordsman idea - charles")
+	fmt.Println("The few comments in my code - mr.dartez")
+}
+
+
 // fightEnemy function, including all sub-functions
 func fightEnemy(player Player, enemy Enemy) {
 	Attack := func(player *Player, enemy *Enemy) {
@@ -181,7 +190,21 @@ func fightEnemy(player Player, enemy Enemy) {
 
 	var selectedAction string
 
-	createdEnemyName := "Furry Femboy :3 swordsman UwU"
+	generateEnemyName := func() string {
+		enemyNameList = {
+			"Slime",
+			"Bird",
+			"Turtle",
+			"Archer",
+			"Furry femboy swordsman UwU"
+			"Spider"
+		}
+
+		var choice int = rand.IntN(5)
+		return enemyNameList[choice]
+	}
+
+	createdEnemyName := generateEnemyName()
 
 	fmt.Println("")
 	fmt.Println("You encounter a(n)", createdEnemyName, "what do you do?")
@@ -226,6 +249,7 @@ func findStructure(player *Player) {
 			os.Exit(1)
 		} else {
 			switch choice {
+
 			case "1", "1.":
 				fmt.Println("You choose the blacksmith")
 				fmt.Println("You walk into the blacksmith, and you see a man hammering away at a piece of metal")
@@ -233,12 +257,14 @@ func findStructure(player *Player) {
 				fmt.Println("The man offers you a piece of metal, and you take it. This increases your damgee by 6")
 				player.Attack += 6
 				findStructure(player)
+
 			case "2", "2.":
 				fmt.Println("You choose the town hall")
 				fmt.Println("You walk up to the door and hear a lot of commotion")
 				fmt.Println("You walk in the town hall, and the person speaking attempts to quiet everyone down.")
 				fmt.Println("The mayor shouts to you about the menace in the cave. He seems to be really on edge about it. He wants you to go defeat it, and save the town.")
 				findStructure(player)
+
 			case "3", "3.":
 				fmt.Println("You choose the cave")
 				fmt.Println("You run into a furry femboy swordsman leader, who says that they want to destory the town")
@@ -247,12 +273,41 @@ func findStructure(player *Player) {
 				fmt.Scanln(&choice)
 				switch choice {
 					case "y", "Y", "Yes", "yes":
-						// placeholder
+						enemy := Enemy{
+							Health: 200,
+							Defense: 20,
+							Resistance: 15,
+							Attack: 10
+						}
+						fightEnemy(player, enemy)
+						credits()
+					case "n", "N", "No", "no":
+						fmt.Println("you can't not fight the boss you know :O")
+						os.Exit(1)
+					default:
+						fmt.Println("Are you trying to break the program?")
+						os.Exit(1)
 				}
 
 			case "4", "4.":
 				fmt.Println("You choose the alley")
-				stepCounter[1] = 1
+				fmt.Println("A man stands there. He offers you a bag of 'fun'. do you take it? y or n")
+				var choice string
+				fmt.Scanln(&choice)
+				switch choice {
+				case "y", "Y", "yes", "Yes":
+					fmt.Println("You say yes, and he gives you the bag.")
+					fmt.Println("You down the bag, and die of an overdose")
+					os.Exit(0)
+				case "n", "N", "no", "No":
+					fmt.Println("You politely decline his offer, much to his dismay.")
+					fmt.Println("In a fit of rage, he decides to down the whole bag. He drops to the floor moments later")
+					findStructure(player)
+				default: 
+					fmt.Println("Stop trying to break my game")
+					os.Exit(1)
+				}
+	
 			default:
 				fmt.Println("Invalid choice")
 				os.Exit(1)
