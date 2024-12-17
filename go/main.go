@@ -13,8 +13,8 @@ import (
 )
 
 var cave bool = false
-var questCounter = [...]interface{}{false, 0}
-var stepCounter = [...]interface{}{"Direction", 0}
+var questCounter = [2]interface{}{false, 0}
+var stepCounter = [2]interface{}{"Direction", 0}
 var pneumonoultramicroscopicsilicovolcanoconiosis bool = false
 
 type Player struct {
@@ -232,12 +232,24 @@ func findStructure(player *Player) {
 				fmt.Println("")
 				fmt.Println("The man offers you a piece of metal, and you take it. This increases your damgee by 6")
 				player.Attack += 6
+				findStructure(player)
 			case "2", "2.":
 				fmt.Println("You choose the town hall")
-				stepCounter[1] = 1
+				fmt.Println("You walk up to the door and hear a lot of commotion")
+				fmt.Println("You walk in the town hall, and the person speaking attempts to quiet everyone down.")
+				fmt.Println("The mayor shouts to you about the menace in the cave. He seems to be really on edge about it. He wants you to go defeat it, and save the town.")
+				findStructure(player)
 			case "3", "3.":
 				fmt.Println("You choose the cave")
-				stepCounter[1] = 1
+				fmt.Println("You run into a furry femboy swordsman leader, who says that they want to destory the town")
+				fmt.Println("Do you fight the leader? y or n")
+				var choice string
+				fmt.Scanln(&choice)
+				switch choice {
+					case "y", "Y", "Yes", "yes":
+						// placeholder
+				}
+
 			case "4", "4.":
 				fmt.Println("You choose the alley")
 				stepCounter[1] = 1
@@ -374,12 +386,16 @@ func main() {
 		} else {
 			switch direction {
 			case "Left", "left", "L", "l":
+				direction = "Left"
 				move(player, direction)
 			case "Right", "right", "R", "r":
+				direction = "Right"
 				move(player, direction)
 			case "Forward", "forward", "F", "f":
+				direction = "Forward"
 				move(player, direction)
 			case "Backward", "backward", "B", "b":
+				direction = "Backward"
 				move(player, direction)
 			default:
 				continue
