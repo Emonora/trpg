@@ -191,13 +191,13 @@ func fightEnemy(player Player, enemy Enemy) {
 	var selectedAction string
 
 	generateEnemyName := func() string {
-		enemyNameList = {
+		enemyNameList := [...]string{
 			"Slime",
 			"Bird",
 			"Turtle",
 			"Archer",
-			"Furry femboy swordsman UwU"
-			"Spider"
+			"Furry femboy swordsman UwU",
+			"Spider",
 		}
 
 		var choice int = rand.IntN(5)
@@ -277,7 +277,7 @@ func findStructure(player *Player) {
 							Health: 200,
 							Defense: 20,
 							Resistance: 15,
-							Attack: 10
+							Attack: 10,
 						}
 						fightEnemy(player, enemy)
 						credits()
